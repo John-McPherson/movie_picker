@@ -1,0 +1,10 @@
+.DS_Store
+brackets.json
+*.config
+*.zip
+/_assets
+/_ipa
+/node_modules
+/vendor
+*.mp4
+.env
