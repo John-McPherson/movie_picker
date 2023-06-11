@@ -4,12 +4,17 @@ import {
 import {
     filteredWatchlist
 } from "./filters.js";
+import {
+    setActiveList
+} from "./toggleList.js";
 
-export var watchlist;
+export var watchlist, sightandsound;
 const output = document.querySelector('#output');
 
 export async function popWatchList() {
     watchlist = await dataHandler(new Request(`./assets/json/movies.json`))
+    sightandsound = await dataHandler(new Request(`./assets/json/sightandsound.json`))
+    setActiveList(watchlist);
 }
 
 export function getMovie() {
@@ -38,5 +43,6 @@ function displayMovie(movie) {
 }
 export default {
     watchlist,
-    getMovie
+    getMovie,
+    sightandsound,
 }

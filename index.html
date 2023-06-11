@@ -12,15 +12,28 @@
 
 <body>
     <main>
+        <nav>
+            <button class="login-btn">Update Data</button>
+            <label class="toggle">
+                <input type="checkbox" id="list-toggle">
+                <span class="slider"></span>
+            </label>
+        </nav>
         <div id="output">
         </div>
         <button class="movie-btn">Get me a dang movie</button>
-        <button class="login-btn">Update Data</button>
+
         <div class="slider-container">
 
             <input type="range" max="80" min="1" value="80" id="runtime-slider">
-            <div class="slider-value" id="attachedElement">100</div>
+            <div class="slider-value" id="attachedElement"></div>
         </div>
+
+        <footer>
+            <p>This product uses the <a href="https://developer.themoviedb.org" target="_blank" rel="noopener">TMDB
+                    API</a> but is not endorsed or
+                certified by TMDB. </p> <img src="./assets/images/tmdb_logo.svg" alt="THe Internet Movie Database Logo">
+        </footer>
     </main>
     <script type="module" src="/assets/js/main.js"></script>
 </body>

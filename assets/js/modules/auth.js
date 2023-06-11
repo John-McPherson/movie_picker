@@ -44,20 +44,40 @@ export async function createSession() {
     let session = await dataHandler(sessionCreationUrl, requestHeaders)
     if (session.success) {
         const watchlistUrl = `https://api.themoviedb.org/3/account/${accountId}/watchlist/movies?api_key=${apiKey}&session_id=${session.session_id}`
-        let watchListData = await dataHandler(watchlistUrl)
-        watchListData = await getRunTimes(watchListData.results);
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(watchListData),
-        };
-        await dataHandler(new Request(`./assets/phpscripts/updatedata.php`), requestOptions);
+        const sightandsoundUrl = `https://api.themoviedb.org/3/list/8255505?api_key=${apiKey}`;
+        let watchListOptions = await prepRequest(watchlistUrl);
+        let sightandsoundOptions = await prepRequest(sightandsoundUrl);
+
+        await dataHandler(new Request(`./assets/phpscripts/updatedata.php?fileName=movies`), watchListOptions);
+        await dataHandler(new Request(`./assets/phpscripts/updatedata.php?fileName=sightandsound`), sightandsoundOptions);
+
         return popWatchList();
     } else {
+        window.location.href = window.location.href.split('?')[0];
         return false;
     }
+}
+
+async function prepRequest(url) {
+
+    let data = await dataHandler(url);
+
+    if (data.items) {
+        console.log('1')
+        data = await getRunTimes(data.items)
+    } else {
+        console.log('2')
+        data = await getRunTimes(data.results);
+    }
+
+    let requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    };
+    return requestOptions;
 }
 
 
@@ -65,7 +85,6 @@ async function getRunTimes(movies) {
     return await Promise.all(movies.map(async (movie) => {
         const movieUrl = `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}`;
         let data = await dataHandler(movieUrl);
-        console.log(data);
         return data;
     }));
 }

@@ -1,6 +1,6 @@
 import {
-    watchlist
-} from "./watchlist.js"
+    activeList
+} from "./toggleList.js"
 
 
 // vars 
@@ -12,24 +12,25 @@ var minRuntime, maxRuntime;
 const runtimeSlider = document.querySelector("#runtime-slider");
 const attachedElement = document.getElementById('attachedElement');
 
-export function filterRuntime(time) {
+export function filterRuntime(time, list) {
 
-    filteredWatchlist = watchlist.filter(movie => {
-
+    return list.filter(movie => {
         return movie.runtime <= time;
     })
 }
 
 function minMaxRuntimes(data) {
 
-    let maxRuntime = data[0];
-    let minRuntime = data[0];
+    let maxRuntime = data[0].runtime;
+    let minRuntime = data[0].runtime;
 
     data.forEach(movie => {
-        if (movie.runtime > maxRuntime.runtime) {
+
+        if (movie.runtime > maxRuntime) {
             maxRuntime = movie.runtime;
+
         }
-        if (movie.runtime < minRuntime.runtime) {
+        if (movie.runtime < minRuntime) {
             minRuntime = movie.runtime;
         }
     });
@@ -41,20 +42,21 @@ function minMaxRuntimes(data) {
 
 }
 
-export function setupFilters() {
+export function setupFilters(list) {
     ({
         maxRuntime,
         minRuntime
-    } = minMaxRuntimes(watchlist));
+    } = minMaxRuntimes(list));
     runtimeSlider.max = maxRuntime;
     runtimeSlider.min = minRuntime;
     runtimeSlider.value = maxRuntime;
-    filteredWatchlist = watchlist;
+    filteredWatchlist = list;
+
 }
 
 function handleChange(event) {
     let value = event.target.value;
-    filterRuntime(value);
+    filteredWatchlist = filterRuntime(value, activeList);
     const percentage = ((value - minRuntime) / (maxRuntime - minRuntime)) * 100;
     const sliderWidth = event.target.offsetWidth;
     const thumbWidth = event.target.offsetHeight;
@@ -65,6 +67,8 @@ function handleChange(event) {
 
     attachedElement.style.left = `${position}px`;
     attachedElement.textContent = value;
+    console.log(filteredWatchlist)
+    console.log(minRuntime)
 }
 // event listners
 runtimeSlider.addEventListener('change', handleChange)
