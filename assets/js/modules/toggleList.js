@@ -1,5 +1,6 @@
 import {
-    setupFilters
+    setupFilters,
+    filterByService
 } from "./filters.js";
 
 import {
@@ -10,7 +11,10 @@ import {
 export var activeList;
 
 export function setActiveList(list) {
-    return activeList = list;
+    activeList = list;
+    setupFilters(list)
+
+    return activeList;
 }
 
 export async function toggleList(e) {
@@ -21,9 +25,9 @@ export async function toggleList(e) {
     } else {
         list = watchlist
     }
-    console.log(list)
-    await setActiveList(list)
-    setupFilters(list)
+    // console.log(list)
+    let newList = await setActiveList(list)
+    setupFilters(newList)
 }
 
 export default {

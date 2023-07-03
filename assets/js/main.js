@@ -13,7 +13,8 @@ import {
 } from "./modules/filters.js";
 
 import {
-    toggleList
+    toggleList,
+    setActiveList
 } from "./modules/toggleList.js";
 
 // dom elements
@@ -31,8 +32,7 @@ toggle.addEventListener('change', toggleList)
 async function run() {
     await createSession();
     await popWatchList();
-    console.log(watchlist)
-    await setupFilters(watchlist)
+    await setActiveList(watchlist)
 
 }
 

@@ -13,12 +13,27 @@
 <body>
     <main>
         <nav>
-            <button class="login-btn">Update Data</button>
-            <label class="toggle">
-                <input type="checkbox" id="list-toggle">
-                <span class="slider"></span>
-            </label>
+            <div>
+                <p>Movies: <span id="movie_count">20</span></p>
+            </div>
+            <div class="nav__right">
+                <button class="login-btn">Update Data</button>
+                <label class="toggle">
+                    <input type="checkbox" id="list-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </nav>
+        <div class="options">
+            <form id="streaming-services" data-type="services">
+
+            </form>
+        </div>
+        <div class="options">
+            <form id="genres" data-type="genres">
+
+            </form>
+        </div>
         <div id="output">
         </div>
         <button class="movie-btn">Get me a dang movie</button>

@@ -63,11 +63,12 @@ async function prepRequest(url) {
     let data = await dataHandler(url);
 
     if (data.items) {
-        console.log('1')
+        console.log(data)
         data = await getRunTimes(data.items)
     } else {
-        console.log('2')
-        data = await getRunTimes(data.results);
+        data = await getFullWatchList(data, url);
+        data = await getRunTimes(data);
+        console.log(data)
     }
 
     let requestOptions = {
@@ -81,13 +82,47 @@ async function prepRequest(url) {
 }
 
 
+async function getFullWatchList(data, url) {
+    let totalPages = data.total_pages;
+    let page = 2;
+    let movies = data.results;
+
+    while (page <= totalPages) {
+        const newData = await dataHandler(url + '&page=' + page);
+        movies = movies.concat(newData.results);
+        page++;
+    }
+
+    return movies;
+}
+
 async function getRunTimes(movies) {
     return await Promise.all(movies.map(async (movie) => {
         const movieUrl = `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${apiKey}`;
-        let data = await dataHandler(movieUrl);
-        return data;
+        const data = await dataHandler(movieUrl);
+        return {
+            "title": data.title,
+            "runtime": data.runtime,
+            "poster_path": data.poster_path,
+            "genres": await populateGenres(data.genres),
+            "services": await populateStreaming(data.id)
+        }
     }));
 }
+
+function populateGenres(data) {
+    return data.map(genre => genre.name)
+}
+
+
+async function populateStreaming(movieID) {
+    const streamingServices = await dataHandler(`https://api.themoviedb.org/3/movie/${movieID}/watch/providers?api_key=${apiKey}&watch_region=GB&watch_monetization_types=flatrate`);
+    if (!streamingServices.results || !streamingServices.results.GB || !streamingServices.results.GB.flatrate) {
+        return [];
+    }
+    return streamingServices.results.GB.flatrate.map(service => service.provider_name);
+}
+
 
 export default {
     auth,
