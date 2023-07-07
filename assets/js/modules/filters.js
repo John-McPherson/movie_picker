@@ -5,7 +5,8 @@ import {
 
 // vars 
 export var filteredWatchlist;
-var minRuntime, maxRuntime, genres, checkboxes, serviceCheckboxes, filteredServices = [];
+var minRuntime, maxRuntime, genres, checkboxes, serviceCheckboxes, filteredServices = [],
+    filteredGenres;
 const services = ['BFI Player Amazon Channel', 'Netflix', 'Amazon Prime Video', 'ITVX', 'Disney Plus'];
 
 // dom elements
@@ -58,6 +59,7 @@ export function setupFilters(list) {
     filteredWatchlist = list;
     setupData()
     setUpStreamingService()
+
     // checkboxes = [...populateCheckboxes(services, form), ...populateCheckboxes(genres, genreForm)]
 
     // setupEventlistners();
@@ -143,8 +145,12 @@ function setupEventlistners() {
 
 
 export function filterByService(list) {
+
     if (filteredServices) {
-        return list.filter(movie => movie.services.some(elm => filteredServices.includes(elm)));
+        list = list.filter(movie => movie["services"].some(elm => filteredServices.includes(elm)));
+    }
+    if (filteredGenres) {
+        list = list.filter(movie => movie["genres"].some(elm => filteredServices.includes(elm)));
     }
     return list;
 }

@@ -7,10 +7,6 @@ import {
     getMovie,
     watchlist
 } from "./modules/watchlist.js";
-import {
-    filterRuntime,
-    setupFilters
-} from "./modules/filters.js";
 
 import {
     toggleList,
